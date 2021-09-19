@@ -21,3 +21,10 @@ time.sleep(4)
 lcd.clear()
 
 # Check for gpsd
+
+# show clock (temp)
+while True:
+    t = time.localtime()
+    lcd.cursor_position(4,0)
+    lcd.message = time.strftime("%H:%M:%S", t)
+    time.sleep(1)
