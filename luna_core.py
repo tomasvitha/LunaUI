@@ -11,3 +11,5 @@ def getChronyStatus():
     unit = Unit(b'chrony.service')
     unit.load()
     return unit.Unit.ActiveState
+
+
