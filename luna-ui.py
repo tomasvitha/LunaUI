@@ -1,10 +1,17 @@
 import time
+import atexit
 import luna_hardware
 import netifaces as ni
 
 # get hardware objects
 lcd = luna_hardware.lcd
 led = luna_hardware.led
+
+# clear the LCD and LED on exit
+def clearHardware():
+    lcd.clear()
+    led.value = False
+atexit.register(clearHardware)
 
 # LED test and welcome screen
 lcd.clear()
@@ -22,9 +29,12 @@ lcd.clear()
 
 # Check for gpsd
 
+
+
 # show clock (temp)
 while True:
     t = time.localtime()
     lcd.cursor_position(4,0)
     lcd.message = time.strftime("%H:%M:%S", t)
     time.sleep(1)
+
