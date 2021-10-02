@@ -13,7 +13,7 @@ lcd_d5 = digitalio.DigitalInOut(board.D16)
 lcd_d4 = digitalio.DigitalInOut(board.D20)
 lcd_bl = None
 
-lcd_columns = 16
+lcd_columns = 20
 lcd_rows = 2
 
 # Init the LCD driver
