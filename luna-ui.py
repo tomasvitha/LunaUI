@@ -1,3 +1,4 @@
+from threading import Timer
 import time
 import atexit
 import luna_hardware
@@ -8,6 +9,10 @@ import netifaces as ni
 lcd = luna_hardware.lcd
 led = luna_hardware.led
 
+# get service objects
+srvGpsd = luna_core.LinuxService('gpsd')
+srvChrony = luna_core.LinuxService('chrony')
+
 # clear the LCD and LED on exit
 def clearHardware():
     lcd.clear()
@@ -15,8 +20,9 @@ def clearHardware():
 atexit.register(clearHardware)
 
 # LED test and welcome screen
-lcd.clear()
-lcd.message = '12345678901234567890'
+time.sleep(0.1)
+lcd.home()
+lcd.message = '12345678901234567890\n********************'
 led.value = True
 time.sleep(3)
 led.value = False
@@ -28,25 +34,29 @@ lcd.message = 'luna.vitha.cz\n' + ipAddress
 time.sleep(4)
 lcd.clear()
 
-# Check for gpsd
+# Prepare GPS strings
+
 
 
 # show clock (temp)
 while True:
     t = time.localtime()
     strTime = time.strftime("%H:%M:%S", t)
-    if luna_core.getGpsdStatus() == 'active':
-        gpsdStatus = 'GPS'
+    
+    if srvGpsd.IsRunning():
+        gpsStatus = luna_core.getGpsdFixType()
     else:
-        gpsdStatus = '   '
+        gpsStatus = '   '
 
-    if luna_core.getChronyStatus() == 'active':
-        chronyStatus = 'NTP'
+    if srvChrony.IsRunning():
+        ntpStatus = 'NTP'
     else:
-        chronyStatus = '   '
+        ntpStatus = '   '
 
-    lcdText = f'      {strTime}\n{gpsdStatus}              {chronyStatus}'
-    lcd.message = lcdText
-
+    lcd.cursor_position(0, 0)
+    lcd.message = gpsStatus
+    lcd.cursor_position(12, 0)
+    lcd.message = strTime
+    lcd.cursor_position(0, 1)
+    lcd.message = ntpStatus
     time.sleep(1)
-

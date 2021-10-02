@@ -1,72 +1,23 @@
 # System checks for the status LCD
 
+from typing import Text
 from pystemd.systemd1 import Unit
-import os
-import gps
-import time
-import threading
+import gpsd
 
-gpsd = None #seting the global variable
+gpsd.connect()
 
-def getGpsdStatus():
-    unit = Unit(b'gpsd.service')
-    unit.load()
-    return unit.Unit.ActiveState.decode()
-
-def getChronyStatus():
-    unit = Unit(b'chrony.service')
-    unit.load()
-    return unit.Unit.ActiveState.decode()
-
-
-#print(f'{getGpsdStatus()}')
-#print(f'{getChronyStatus()}')
-
-class GpsPoller(threading.Thread):
-  def __init__(self):
-    threading.Thread.__init__(self)
-    global gpsd #bring it in scope
-    gpsd = gps.gps(mode=0) #starting the stream of info
-    self.current_value = None
-    self.running = True #setting the thread running to true
- 
-  def run(self):
-    global gpsd
-    while gpsp.running:
-      gpsd.next() #this will continue to loop and grab EACH set of gpsd info to clear the buffer
-
-if __name__ == '__main__':
-  gpsp = GpsPoller() # create the thread
+def getGpsdFixType():
   try:
-    gpsp.start() # start it up
-    while True:
-      #It may take a second or two to get good data
-      #print gpsd.fix.latitude,', ',gpsd.fix.longitude,'  Time: ',gpsd.utc
- 
-      os.system('clear')
- 
-      print()
-      print(' GPS reading')
-      print('----------------------------------------')
-      print('latitude    ' , gpsd.fix.latitude)
-      print('longitude   ' , gpsd.fix.longitude)
-      print('time utc    ' , gpsd.utc,' + ', gpsd.fix.time)
-      print('altitude (m)' , gpsd.fix.altitude)
-      print('eps         ' , gpsd.fix.eps)
-      print('epx         ' , gpsd.fix.epx)
-      print('epv         ' , gpsd.fix.epv)
-      print('ept         ' , gpsd.fix.ept)
-      print('speed (m/s) ' , gpsd.fix.speed)
-      print('climb       ' , gpsd.fix.climb)
-      print('track       ' , gpsd.fix.track)
-      print('mode        ' , gpsd.fix.mode)
-      print()
-      print('sats        ' , gpsd.satellites)
- 
-      time.sleep(5) #set to whatever
- 
-  except (KeyboardInterrupt, SystemExit): #when you press ctrl+c
-    print("\nKilling Thread...")
-    gpsp.running = False
-    gpsp.join() # wait for the thread to finish what it's doing
-  print("Done.\nExiting.")
+    return gpsd.get_current().mode
+  except:
+    print('Exception - GPSD not running?')
+  
+# Wrapper class for pystemd
+class LinuxService:
+  def __init__(self, name):
+    serviceName = name + '.service'
+    self.service = Unit(bytes(serviceName,'utf8'))
+    self.service.load()
+
+  def IsRunning(self):
+    return self.service.Unit.ActiveState.decode() == 'active'
