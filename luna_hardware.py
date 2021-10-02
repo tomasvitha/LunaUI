@@ -13,6 +13,7 @@ lcd_d5 = digitalio.DigitalInOut(board.D16)
 lcd_d4 = digitalio.DigitalInOut(board.D20)
 lcd_bl = None
 
+# 100x16 OLED in text mode (acts as 20x2)
 lcd_columns = 20
 lcd_rows = 2
 
