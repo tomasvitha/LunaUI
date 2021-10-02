@@ -32,11 +32,11 @@ class ChronyServerStats:
     self.reqs_per_second = 0
   
   def get_stats(self):
-    raw_result = subprocess.run(['chronyc', '-c', 'serverstats'], stdout = subprocess.PIPE) 
+    raw_result = subprocess.run(['sudo', 'chronyc', '-c', 'serverstats'], stdout = subprocess.PIPE) 
     stats = raw_result.stdout.decode('utf8').split(',')
-    self.ntp_packets = stats[0]
-    self.ntp_dropped = stats[1]
-    self.reqs_per_second = self.ntp_packets - self.ntp_packets_last
+    self.ntp_packets = int(stats[0])
+    self.ntp_dropped = int(stats[1])
+    self.reqs_per_second = int(self.ntp_packets) - int(self.ntp_packets_last)
 
 # Wrapper class for pystemd
 class LinuxService:
