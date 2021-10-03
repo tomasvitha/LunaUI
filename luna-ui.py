@@ -26,16 +26,23 @@ def exit():
 atexit.register(exit)
 
 # LED test and welcome screen
-lcd.message = '12345678901234567890\n********************'
+#..............12345678901234567890
+lcd.cursor_position(0,0)
+lcd.message = '   GPS NTP SERVER'
+lcd.cursor_position(0,1)
+lcd.message = 'v2.1         10/2021'
 led.value = True
-time.sleep(1)
+time.sleep(3)
 led.value = False
 
 # Show hostname and IP address
-ipAddress = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
+ip_address = ni.ifaddresses('eth0')[ni.AF_INET][0]['addr']
 lcd.clear()
-lcd.message = 'luna.vitha.cz\n' + ipAddress
-time.sleep(1)
+lcd.cursor_position(0,0)
+lcd.message = 'luna.vitha.cz'
+lcd.cursor_position(0,1)
+lcd.message = ip_address
+time.sleep(3)
 lcd.clear()
 
 while True:
