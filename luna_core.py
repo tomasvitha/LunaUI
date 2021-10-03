@@ -83,13 +83,13 @@ class ChronyServerStats:
     if self._chrony_service.is_running():
         self._get_raw_stats()
         # we have multiple screens to show
-        if self._display_count < 3: self.ntp_text = f'NTP pps: {self.reqs_per_second}'.ljust(20)
-        elif self._display_count < 6: self.ntp_text = f'NTP packets: {self.ntp_packets}'.ljust(20)
-        elif self._display_count < 9: self.ntp_text = f'NTP dropped: {self.ntp_dropped}'.ljust(20)
+        if self._display_count < 4: self.ntp_text = f'NTP pps: {self.reqs_per_second}'.ljust(20)
+        elif self._display_count < 7: self.ntp_text = f'NTP pkts: {self.ntp_packets}'.ljust(20)
+        elif self._display_count < 10: self.ntp_text = f'NTP drop: {self.ntp_dropped}'.ljust(20)
         
         self._display_count += 1
-        if self._display_count >= 9: self._display_count = 0 # reset counter
+        if self._display_count >= 10: self._display_count = 0 # reset counter
     else: 
-        self.ntp_text = 'NTP IS OFFLINE !!'.ljust(20)
+        self.ntp_text = ' NTP IS OFFLINE !!'.ljust(20)
 
 
