@@ -36,7 +36,10 @@ class ChronyServerStats:
     stats = raw_result.stdout.decode('utf8').split(',')
     self.ntp_packets = int(stats[0])
     self.ntp_dropped = int(stats[1])
+
+    # calculate packets per second
     self.reqs_per_second = int(self.ntp_packets) - int(self.ntp_packets_last)
+    self.ntp_packets_last = self.ntp_packets
 
 # Wrapper class for pystemd
 class LinuxService:
