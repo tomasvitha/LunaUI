@@ -25,8 +25,12 @@ def exit():
     led.value = False
 atexit.register(exit)
 
+# Print a message to the console
+print('Luna UI for GPS disciplined NTP server')
+print('v1.1\n4.10.2021 FakirCZ\n')
+print('Press Ctrl+C to exit.')
+
 # LED test and welcome screen
-#..............12345678901234567890
 lcd.cursor_position(0,0)
 lcd.message = '   GPS NTP SERVER'
 lcd.cursor_position(0,1)
